@@ -168,5 +168,17 @@ public class CategoryTest
 
         Assert.False(category.IsActive);
     }
+
+    public void Update()
+    {
+        var category = new DomainEntity.Category("Valid Name", "Valid Description");
+
+        var updatedValues = new { Name = "Updated Name", Description = "Updated Description" };
+
+        category.Update(updatedValues.Name, updatedValues.Description);
+
+        Assert.Equal(updatedValues.Name, category.Name);
+        Assert.Equal(updatedValues.Description, category.Description);
+    }
 }
 
