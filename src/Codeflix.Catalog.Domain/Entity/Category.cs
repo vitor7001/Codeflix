@@ -30,6 +30,14 @@ public class Category
         IsActive = false;
         Validate();
     }
+    public void Update(string name, string? description = null)
+    {
+        Name = name;
+        Description = description ?? Description;
+
+        Validate();
+    }
+
     private void Validate()
     {
         if (String.IsNullOrWhiteSpace(Name))
@@ -44,11 +52,9 @@ public class Category
         if (Description == null)
             throw new EntityValidationException($"{nameof(Description)} should not be empty or null");
 
-
         if (Description.Length > 10_000)
             throw new EntityValidationException($"{nameof(Description)} should be less or equal 10.000 characters long");
     }
 
 
 }
-        
