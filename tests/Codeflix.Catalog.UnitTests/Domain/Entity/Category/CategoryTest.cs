@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Runtime.Intrinsics.Arm;
+using Xunit;
 using DomainEntity = Codeflix.Catalog.Domain.Entity;
 
 namespace Codeflix.Catalog.UnitTests.Domain.Entity.Category;
@@ -63,5 +64,20 @@ public class CategoryTest
         Assert.True(category.CreatedAt < dateTimeAfter);
         Assert.Equal(isActive , category.IsActive);
     }
+
+    [Theory(DisplayName = nameof(InstantiateThrowNewErrorWhenNameIsEmpty))]
+    [Trait("Domain", "Category - Aggregates")]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData("    ")]
+    public void InstantiateThrowNewErrorWhenNameIsEmpty(string? name)
+    {
+        Action action = () => new DomainEntity.Category(name!, "Valid description");
+
+        var exception = Assert.Throws<EntityValidationException>(action);
+
+        Assert.Equal("Name should not bem empty or null", exception.Message);
+    }
+
 }
 
