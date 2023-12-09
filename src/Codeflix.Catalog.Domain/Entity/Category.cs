@@ -20,7 +20,17 @@ public class Category
         Validate();
     }
 
-    public void Validate()
+    public void Activate()
+    {
+        IsActive = true;
+        Validate();
+    }
+    public void Deactivate()
+    {
+        IsActive = false;
+        Validate();
+    }
+    private void Validate()
     {
         if (String.IsNullOrWhiteSpace(Name))
             throw new EntityValidationException($"{nameof(Name)} should not be empty or null");
@@ -38,5 +48,7 @@ public class Category
         if (Description.Length > 10_000)
             throw new EntityValidationException($"{nameof(Description)} should be less or equal 10.000 characters long");
     }
+
+
 }
         

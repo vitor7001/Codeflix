@@ -132,5 +132,41 @@ public class CategoryTest
 
         Assert.Equal("Description should be less or equal 10.000 characters long", exception.Message);
     }
+
+    [Fact(DisplayName = nameof(ActivateCategory))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void ActivateCategory()
+    {
+
+        var validData = new
+        {
+            Name = "category name",
+            Description = "category description"
+        };
+
+        var category = new DomainEntity.Category(validData.Name, validData.Description, false);
+
+        category.Activate();
+
+        Assert.True(category.IsActive);
+    }
+
+    [Fact(DisplayName = nameof(DeactivateCategory))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void DeactivateCategory()
+    {
+
+        var validData = new
+        {
+            Name = "category name",
+            Description = "category description"
+        };
+
+        var category = new DomainEntity.Category(validData.Name, validData.Description, true);
+
+        category.Deactivate();
+
+        Assert.False(category.IsActive);
+    }
 }
 
