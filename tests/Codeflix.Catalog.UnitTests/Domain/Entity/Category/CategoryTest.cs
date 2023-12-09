@@ -1,5 +1,4 @@
 ﻿using Codeflix.Catalog.Domain.Exceptions;
-using System.Runtime.Intrinsics.Arm;
 using Xunit;
 using DomainEntity = Codeflix.Catalog.Domain.Entity;
 
@@ -63,7 +62,7 @@ public class CategoryTest
         Assert.NotEqual(default(DateTime), category.CreatedAt);
         Assert.True(category.CreatedAt > dateTimeBefore);
         Assert.True(category.CreatedAt < dateTimeAfter);
-        Assert.Equal(isActive , category.IsActive);
+        Assert.Equal(isActive, category.IsActive);
     }
 
     [Theory(DisplayName = nameof(InstantiateThrowNewErrorWhenNameIsEmpty))]
@@ -169,7 +168,9 @@ public class CategoryTest
         Assert.False(category.IsActive);
     }
 
-    public void Update()
+    [Fact(DisplayName = nameof(UpdateNameAndDescription))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void UpdateNameAndDescription()
     {
         var category = new DomainEntity.Category("Valid Name", "Valid Description");
 
@@ -180,5 +181,87 @@ public class CategoryTest
         Assert.Equal(updatedValues.Name, category.Name);
         Assert.Equal(updatedValues.Description, category.Description);
     }
+
+
+    [Fact(DisplayName = nameof(UpdateName))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void UpdateName()
+    {
+        var category = new DomainEntity.Category("Valid Name", "Valid Description");
+
+        var updatedValues = new { Name = "Updated Name" };
+
+        var currentDescription = category.Description;
+
+        category.Update(updatedValues.Name);
+
+        Assert.Equal(updatedValues.Name, category.Name);
+        Assert.Equal(currentDescription, category.Description);
+    }
+
+    [Theory(DisplayName = nameof(UpdateErrorWhenNameIsEmpty))]
+    [Trait("Domain", "Category - Aggregates")]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData("    ")]
+    public void UpdateErrorWhenNameIsEmpty(string? name)
+    {
+        var category = new DomainEntity.Category("Valid Name", "Valid Description");
+
+        Action action = () => category.Update(name!);
+
+        var exception = Assert.Throws<EntityValidationException>(action);
+
+        Assert.Equal("Name should not be empty or null", exception.Message);
+    }
+
+    [Theory(DisplayName = nameof(UpdateErrorWhenNameIsLessThan3Characters))]
+    [Trait("Domain", "Category - Aggregates")]
+    [InlineData("na")]
+    [InlineData("va")]
+    [InlineData("a")]
+    public void UpdateErrorWhenNameIsLessThan3Characters(string invalidName)
+    {
+        var category = new DomainEntity.Category("Valid Name", "Valid Description");
+
+        Action action = () => category.Update(invalidName);
+
+        var exception = Assert.Throws<EntityValidationException>(action);
+
+        Assert.Equal("Name should be at least 3 characters long", exception.Message);
+    }
+
+
+    [Fact(DisplayName = nameof(UpdateErrorWhenNameIsGreaterThan255Characters))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void UpdateErrorWhenNameIsGreaterThan255Characters()
+    {
+        var invalidName = String.Join(null, Enumerable.Range(1, 256).Select(_ => "a").ToArray());
+
+        var category = new DomainEntity.Category("Valid Name", "Valid Description");
+
+        Action action = () => category.Update(invalidName);
+
+        var exception = Assert.Throws<EntityValidationException>(action);
+
+        Assert.Equal("Name should be less or equal 255 characters long", exception.Message);
+    }
+
+    [Fact(DisplayName = nameof(UpdateErrorWhenDescriptionIsGreaterThan10_000Characters))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void UpdateErrorWhenDescriptionIsGreaterThan10_000Characters()
+    {
+        var invalidDescription = String.Join(null, Enumerable.Range(1, 10_001).Select(_ => "a").ToArray());
+
+        var category = new DomainEntity.Category("Valid Name", "Valid Description");
+
+        Action action = () => category.Update("Valid Name", invalidDescription);
+
+        var exception = Assert.Throws<EntityValidationException>(action);
+
+        Assert.Equal("Description should be less or equal 10.000 characters long", exception.Message);
+    }
+
+
 }
 
