@@ -1,4 +1,5 @@
-﻿using System.Runtime.Intrinsics.Arm;
+﻿using Codeflix.Catalog.Domain.Exceptions;
+using System.Runtime.Intrinsics.Arm;
 using Xunit;
 using DomainEntity = Codeflix.Catalog.Domain.Entity;
 
