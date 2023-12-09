@@ -26,8 +26,8 @@ public class CategoryTest
         Assert.NotNull(category);
         Assert.Equal(validData.Name, category.Name);
         Assert.Equal(validData.Description, category.Description);
-        Assert.NotEmpty(default(Guid), category.Id);
-        Assert.NotEmpty(default(DateTime), category.CreatedAt);
+        Assert.NotEqual(default(Guid), category.Id);
+        Assert.NotEqual(default(DateTime), category.CreatedAt);
         Assert.True(category.CreatedAt > dateTimeBefore);
         Assert.True(category.CreatedAt < dateTimeAfter);
         Assert.True(category.isActive);
