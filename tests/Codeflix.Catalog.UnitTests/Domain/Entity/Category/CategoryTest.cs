@@ -178,12 +178,12 @@ public class CategoryTest
     {
         var category = _categoryTestFixture.GetValidCategory();
 
-        var updatedValues = new { Name = "Updated Name", Description = "Updated Description" };
+        var categoryWithNewValues = _categoryTestFixture.GetValidCategory();
 
-        category.Update(updatedValues.Name, updatedValues.Description);
+        category.Update(categoryWithNewValues.Name, categoryWithNewValues.Description);
 
-        category.Name.Should().Be(updatedValues.Name);
-        category.Description.Should().Be(updatedValues.Description);
+        category.Name.Should().Be(categoryWithNewValues.Name);
+        category.Description.Should().Be(categoryWithNewValues.Description);
 
     }
 
@@ -194,13 +194,13 @@ public class CategoryTest
     {
         var category = _categoryTestFixture.GetValidCategory();
 
-        var updatedValues = new { Name = "Updated Name" };
+        var newName = _categoryTestFixture.GetValidCategoryName();
 
         var currentDescription = category.Description;
 
-        category.Update(updatedValues.Name);
+        category.Update(newName);
 
-        category.Name.Should().Be(updatedValues.Name);
+        category.Name.Should().Be(newName);
         category.Description.Should().Be(currentDescription);
     }
 
@@ -240,7 +240,7 @@ public class CategoryTest
     [Trait("Domain", "Category - Aggregates")]
     public void UpdateErrorWhenNameIsGreaterThan255Characters()
     {
-        var invalidName = String.Join(null, Enumerable.Range(1, 256).Select(_ => "a").ToArray());
+        var invalidName = _categoryTestFixture.Faker.Lorem.Letter(256);
 
         var category = _categoryTestFixture.GetValidCategory();
 
@@ -253,7 +253,10 @@ public class CategoryTest
     [Trait("Domain", "Category - Aggregates")]
     public void UpdateErrorWhenDescriptionIsGreaterThan10_000Characters()
     {
-        var invalidDescription = String.Join(null, Enumerable.Range(1, 10_001).Select(_ => "a").ToArray());
+        var invalidDescription = _categoryTestFixture.Faker.Commerce.ProductDescription();
+
+        while (invalidDescription.Length <= 10_000)
+            invalidDescription = $"{invalidDescription} {_categoryTestFixture.Faker.Commerce.ProductDescription()}";
 
         var category = _categoryTestFixture.GetValidCategory();
 
