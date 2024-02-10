@@ -50,7 +50,7 @@ public class Category : AggregateRoot
             throw new EntityValidationException($"{nameof(Name)} should be less or equal 255 characters long");
 
         if (Description == null)
-            throw new EntityValidationException($"{nameof(Description)} should not be empty or null");
+            throw new EntityValidationException($"{nameof(Description)} should not be null");
 
         if (Description.Length > 10_000)
             throw new EntityValidationException($"{nameof(Description)} should be less or equal 10.000 characters long");
