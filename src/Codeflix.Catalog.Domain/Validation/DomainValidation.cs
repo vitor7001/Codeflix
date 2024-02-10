@@ -18,4 +18,13 @@ public class DomainValidation
             throw new EntityValidationException($"{fieldName} should not be null or empty");
 
     }
+
+    public static void MinLength(string target, int minLenght, string fieldName)
+    {
+        if (target.Length < minLenght)
+            throw new EntityValidationException($"{fieldName} should not be less than {minLenght} characters long.");
+        
+    }
+
+
 }
