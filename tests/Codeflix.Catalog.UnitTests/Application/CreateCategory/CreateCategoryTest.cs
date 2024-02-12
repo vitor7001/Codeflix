@@ -1,4 +1,5 @@
-﻿using Codeflix.Catalog.Domain.Entity;
+﻿using Codeflix.Catalog.Application.Interfaces;
+using Codeflix.Catalog.Domain.Entity;
 using Codeflix.Catalog.Domain.Repository;
 using FluentAssertions;
 using Moq;
