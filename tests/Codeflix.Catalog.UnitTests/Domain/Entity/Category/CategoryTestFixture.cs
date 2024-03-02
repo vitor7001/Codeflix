@@ -3,6 +3,10 @@
 using Codeflix.Catalog.UnitTests.Common;
 using Xunit;
 using DomainEntity = Codeflix.Catalog.Domain.Entity;
+
+[CollectionDefinition(nameof(CategoryTestFixture))]
+public class CategoryTestFixtureCollection : ICollectionFixture<CategoryTestFixture>
+{ }
 public class CategoryTestFixture : BaseFixture
 {
     public CategoryTestFixture()
@@ -36,6 +40,3 @@ public class CategoryTestFixture : BaseFixture
                 GetValidCategoryDescription());
 }
 
-[CollectionDefinition(nameof(CategoryTestFixture))]
-public class CategoryTestFixtureCollection : ICollectionFixture<CategoryTestFixture>
-{ }
