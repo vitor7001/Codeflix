@@ -5,7 +5,7 @@ using FluentAssertions;
 using Moq;
 using System.Threading;
 using Xunit;
-using UseCases = Codeflix.Catalog.Application.UseCases.CreateCategory;
+using UseCases = Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 
 namespace Codeflix.Catalog.UnitTests.Application.CreateCategory;
 public class CreateCategoryTest
@@ -22,7 +22,7 @@ public class CreateCategoryTest
             repositoryMock.Object, 
             unitOfWork.Object);
 
-        var input = new CreateCategoryInput(
+        var input = new UseCases.CreateCategoryInput(
             "Nome",
             "Descrição", 
             true
@@ -43,11 +43,11 @@ public class CreateCategoryTest
             Times.Once
         );
 
-        output.ShouldNotBeNull();
+        output.Should().NotBeNull();
         output.Name.Should().Be("Nome");
         output.Description.Should().Be("Descrição");
         output.IsActive.Should().Be(true);
-        (output.id != null && output.id != Guid.Empty).Should().BeTrue();
-        (output.CreatedAt != null && output.CreatedAt != default(DateTime)).Should.BeTrue();
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
     }
 }
